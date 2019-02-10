@@ -21,10 +21,22 @@ export class AppComponent implements OnInit {
 
   public isGameOver: boolean;
 
+  public isMouseDown: boolean;
+
+  public mousedown() {
+    this.isMouseDown = true;
+  }
+  public mouseup() {
+    this.isMouseDown = false;
+  }
+
 
   public shake() {
-
     this.field.nativeElement.classList.add('shake');
+
+    setTimeout(() => {
+      this.field.nativeElement.classList.remove('shake');
+    }, 350);
   }
 
   public gameover() {
@@ -39,31 +51,21 @@ export class AppComponent implements OnInit {
 
   public reveal(x: number, y: number): void {
     try {
-      // gets the reference.
       const region = this.regions[x][y];
-
       if (region.revealed) {
         return;
       }
-
       if (typeof region !== 'undefined' && region !== null) {
-        // marks the region as revealed.
         region.revealed = true;
-
-        // too bad mate.
         if (region.state) {
           this.gameover();
         } else {
-          // gets the number of bombs surrounding.
           region.value = this.surroundings(x, y);
-
-          // if there are 0 bombs nerby, reveals neighboring regions.
           if (region.value === 0) {
             this.shake();
             if (x >= 0 && x <= this.numberOfXRegions) {
               this.reveal(x - 1, y);
               this.reveal(x + 1, y);
-
               if (y >= 0 && y <= this.numberOfYRegions) {
                 this.reveal(x - 1, y - 1);
                 this.reveal(x - 1, y + 1);
@@ -75,13 +77,9 @@ export class AppComponent implements OnInit {
             }
           }
         }
-
-        // updates the regionon the array.
         this.regions[x][y] = region;
       }
-    } catch (e) {
-      console.log(e);
-    }
+    } catch (e) { }
   }
 
   public flag() {
