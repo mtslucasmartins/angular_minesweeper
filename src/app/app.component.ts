@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 
 @Component({
   selector: 'app-root',
@@ -6,6 +6,8 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
+
+  @ViewChild('field') field: ElementRef;
 
   public regions: any[][];
 
@@ -15,8 +17,24 @@ export class AppComponent implements OnInit {
 
   public numberOfMines = 99;
 
+  public flagsCount = 0;;
+
+  public isGameOver: boolean;
+
+
+  public shake() {
+
+    this.field.nativeElement.classList.add('shake');
+  }
+
   public gameover() {
-    alert('Game Over');
+    this.isGameOver = true;
+
+    const explosion = new Audio();
+
+    explosion.src = 'assets/sounds/bomb_explosion (short).mp3';
+    explosion.load();
+    explosion.play();
   }
 
   public reveal(x: number, y: number): void {
@@ -34,13 +52,14 @@ export class AppComponent implements OnInit {
 
         // too bad mate.
         if (region.state) {
-
+          this.gameover();
         } else {
           // gets the number of bombs surrounding.
           region.value = this.surroundings(x, y);
 
           // if there are 0 bombs nerby, reveals neighboring regions.
           if (region.value === 0) {
+            this.shake();
             if (x >= 0 && x <= this.numberOfXRegions) {
               this.reveal(x - 1, y);
               this.reveal(x + 1, y);
@@ -70,13 +89,14 @@ export class AppComponent implements OnInit {
   }
 
   public onRegionRightClick(x: number, y: number) {
-    // gets the reference.
     const region = this.regions[x][y];
+    if (!region.revealed) {
+      region.marked = !region.marked;
 
-    region.marked = !region.marked;
+      this.flagsCount += region.marked ? 1 : -1;
 
-    this.regions[x][y] = region;
-
+      this.regions[x][y] = region;
+    }
     return false;
   }
 
@@ -114,6 +134,11 @@ export class AppComponent implements OnInit {
 
 
   public ngOnInit() {
+    this.regions = [[]];
+    this.isGameOver = false;
+
+    this.flagsCount = 0;
+
     const size = this.numberOfXRegions * this.numberOfYRegions;
     const minePositions: any[] = [];
 

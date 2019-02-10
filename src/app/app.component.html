@@ -1,15 +1,34 @@
 <div class="page-content">
-  <div *ngFor="let row of regions; let x = index" class="x">
-    <div *ngFor="let column of row; let y = index" class="y">
-      <div class="region d-flex aling-items-center">
-        <div *ngIf="!column.revealed" class="region-secret d-flex align-items-center" (click)="onRegionLeftClick(x ,y)"
-          (contextmenu)="onRegionRightClick(x ,y)">
-          <span *ngIf="column.marked" class="fas fa-flag w-100 text-center"></span>
+  <div #field class="minesweeper">
+    <div class="header pt-3 pr-3 pl-3">
+      <div class="container-fluid bg-light">
+        <div class="row">
+          <div class="col-3">
+            {{ 99 - flagsCount }}
+          </div>
+          <div class="col-3">
+            <button class="btn" (click)="ngOnInit()">
+
+            </button>
+          </div>
         </div>
-        <div *ngIf="column.revealed" [class.puffIn]="column.state" class="region-revealed d-flex align-items-center"
-          (click)="onRegionLeftClick(x ,y)">
-          <span *ngIf="!column.state" class="w-100 text-center">{{ column.value }}</span>
-          <span *ngIf="column.state" class="fas fa-bomb w-100 text-center"></span>
+      </div>
+    </div>
+    <div class="content p-3">
+      <div *ngIf="isGameOver" class="overlay position-absolute w-100 h-100"> </div>
+      <div *ngFor="let row of regions; let x = index" class="d-flex flex-row justify-content-center">
+        <div *ngFor="let column of row; let y = index" class="">
+          <div class="region d-flex aling-items-center">
+            <div *ngIf="!column.revealed" class="region-secret d-flex align-items-center" (click)="onRegionLeftClick(x ,y)"
+              (contextmenu)="onRegionRightClick(x ,y)">
+              <span *ngIf="column.marked" class="fas fa-flag w-100 text-center"></span>
+            </div>
+            <div *ngIf="column.revealed" class="region-revealed d-flex align-items-center" (click)="onRegionLeftClick(x ,y)"
+              (contextmenu)="onRegionRightClick(x ,y)">
+              <span *ngIf="!column.state" class="w-100 text-center">{{ column.value == 0 ? '': column.value }}</span>
+              <span *ngIf="column.state" class="fas fa-bomb w-100 text-center"></span>
+            </div>
+          </div>
         </div>
       </div>
     </div>

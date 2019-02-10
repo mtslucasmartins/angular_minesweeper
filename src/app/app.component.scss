@@ -1,3 +1,14 @@
+.minesweeper {
+  position: relative;
+  overflow: hidden;
+  width: fit-content;
+
+  .overlay {
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+}
+
 .page-content {
   background-color: #262626;
 }
@@ -18,22 +29,25 @@ $bg-4: #7e7a70;
 $bg-5: #8e8a81;
 
 .region {
-  width: 30px;
-  height: 30px;
+  margin: 1px;
+  width: 28px;
+  height: 28px;
 
   border: solid 1px $bg-3;
+  border-radius: 2px;
 
   .region-revealed,
   .region-secret {
     width: 100%;
     height: 100%;
     font-family: "Droid Serif.";
+    font-size: 22px;
   }
 
   .region-secret {
     background-color: $bg-4;
     &:hover {
-      box-shadow: 1px 2px 40px rgba(0, 0, 0, 0.5);
+      box-shadow: 1px 2px 40px rgba(0, 0, 0, 0.7);
       z-index: 99;
     }
   }
@@ -2967,5 +2981,35 @@ Copyright (c) 2018 Christian Pucci
     opacity: 0;
     -webkit-transform: scale(1, 1) translateY(-900%);
     transform: scale(1, 1) translateY(-900%);
+  }
+}
+
+.shake {
+  animation: shake 0.3s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+@keyframes shake {
+  10%,
+  90% {
+    transform: translate3d(-1px, 0, 0);
+  }
+
+  20%,
+  80% {
+    transform: translate3d(2px, 0, 0);
+  }
+
+  30%,
+  50%,
+  70% {
+    transform: translate3d(-4px, 0, 0);
+  }
+
+  40%,
+  60% {
+    transform: translate3d(4px, 0, 0);
   }
 }
