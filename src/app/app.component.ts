@@ -7,13 +7,31 @@ import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 })
 export class AppComponent implements OnInit {
 
-  @ViewChild('field') field: ElementRef;
+  @ViewChild('field', { static: true }) field: ElementRef;
+
+  public difficulty: 'easy' | 'medium' | 'hard' | 'custom' = 'medium';
+
+  public configs = {
+    easy: {
+      width: 10,
+      height: 10,
+      bombs: 10
+    }, 
+    medium: {
+      width: 12,
+      height: 12,
+      bombs: 4
+    }  
+  } 
+
+
+
 
   public regions: any[][];
 
-  public numberOfXRegions = 16;
+  public numberOfXRegions = 10;
 
-  public numberOfYRegions = 30;
+  public numberOfYRegions = 10;
 
   public numberOfMines = 99;
 
@@ -22,6 +40,7 @@ export class AppComponent implements OnInit {
   public isGameOver: boolean;
 
   public isMouseDown: boolean;
+
 
   public mousedown() {
     this.isMouseDown = true;
@@ -130,29 +149,39 @@ export class AppComponent implements OnInit {
     return count;
   }
 
+  public putTheMines(howMany: number, area: number): number[] {
+    let mines: number[] = [];
+    let minesLeft = howMany;
+    while (minesLeft > 0) {
+      let location = 0;
+      do {
+        location = Math.floor(Math.random() * area);
+      } while (mines.includes(location));
+      mines.push(location);
+      minesLeft--;
+    }  
+    return mines;
+  }
 
   public ngOnInit() {
+    const difficulty = this.difficulty; 
+
     this.regions = [[]];
     this.isGameOver = false;
 
     this.flagsCount = 0;
 
-    const size = this.numberOfXRegions * this.numberOfYRegions;
-    const minePositions: any[] = [];
+    const WIDTH = this.configs[difficulty].width;
+    const HEIGHT = this.configs[difficulty].height;
+    const BOMBS = this.configs[difficulty].bombs;
 
-    let minesCount = 0;
-    while (minesCount < this.numberOfMines) {
-      minesCount++;
-      let minePosition = 0;
-      do {
-        minePosition = Math.floor(Math.random() * size);
-      } while (minePositions.includes(minePosition));
-      minePositions.push(minePosition);
-    }
+    const size = WIDTH * HEIGHT;
+    const minePositions: any[] = this.putTheMines(BOMBS, size);
+
     let xs = new Array<any>();
-    for (let x = 0; x < this.numberOfXRegions; x++) {
+    for (let x = 0; x < HEIGHT; x++) {
       let ys = new Array<any>();
-      for (let y = 0; y < this.numberOfYRegions; y++) {
+      for (let y = 0; y < WIDTH; y++) {
         if (minePositions.includes((x + 1) * (y + 1))) {
           ys.push({ value: 0, state: true, marked: false, revealed: false });
         } else {
@@ -163,6 +192,10 @@ export class AppComponent implements OnInit {
     }
 
     this.regions = xs;
+  }
+
+  flagsLeft(): number {
+    return this.configs[this.difficulty].bombs - this.flagsCount;
   }
 
 }

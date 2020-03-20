@@ -1,47 +1,53 @@
-<div class="page-content">
-  <div #field class="minesweeper">
-    <div class="header pt-3 pr-3 pl-3">
-      <div class="container-fluid text-light">
-        <div class="row align-items-center">
-          <div class="col-4 w-100 text-center" style="font-size: 32px;">
-            {{ 99 - flagsCount }}
-          </div>
-          <div class="col-4">
-            <button class="btn w-100" (click)="ngOnInit()" style="font-size: 32px;" title="Restart">
-              <span *ngIf="isGameOver" class="far fa-dizzy w-100 text-light text-center"></span>
-              <span *ngIf="!isGameOver && isMouseDown" class="far fa-grimace w-100 text-light text-center"></span>
-              <span *ngIf="!isGameOver && !isMouseDown" class="far fa-smile w-100 text-light text-center"></span>
-            </button>
-          </div>
-          <div class="col-4" style="font-size: 32px;">
-            <button class="btn" (click)="ngOnInit()">
-            </button>
-          </div>
-        </div>
+<div class="page-container">
+
+  <header class="container-fluid">
+    <div class="row h-100 align-items-center">
+
+      <div class="col-4 w-100 text-center">
+        <i class="fas fa-flag"></i>&nbsp;&nbsp;{{ flagsLeft() }}
+      </div>
+
+      <div class="col-4">
+        <button class="btn w-100" (click)="ngOnInit()" style="font-size: 32px;" title="Restart">
+          <span *ngIf="isGameOver" class="far fa-dizzy w-100 text-center"></span>
+          <span *ngIf="!isGameOver && isMouseDown" class="far fa-grimace w-100 text-center"></span>
+          <span *ngIf="!isGameOver && !isMouseDown" class="far fa-smile w-100 text-center"></span>
+        </button>
+      </div>
+
+      <div class="col-4" style="font-size: 32px;">
+        <button class="btn" (click)="ngOnInit()">
+        </button>
       </div>
     </div>
-    <div class="content p-3">
-      <div *ngIf="isGameOver" class="overlay position-absolute w-100 h-100"> </div>
-      <div *ngFor="let row of regions; let x = index" class="d-flex flex-row justify-content-center">
-        <div *ngFor="let column of row; let y = index" class="">
-          <div class="region d-flex aling-items-center">
-            <div *ngIf="!column.revealed" class="region-secret d-flex align-items-center" 
-              (mousedown)="mousedown()" (mouseup)="mouseup()" (blur)="mouseup()"
-              (click)="onRegionLeftClick(x ,y)"
-              (contextmenu)="onRegionRightClick(x ,y)">
-              <span *ngIf="column.marked" class="fas fa-flag w-100 text-center"></span>
-            </div>
-            <div *ngIf="column.revealed" class="region-revealed d-flex align-items-center" (click)="onRegionLeftClick(x ,y)"
-              (contextmenu)="onRegionRightClick(x ,y)">
-              <span *ngIf="!column.state" class="w-100 text-center">
-                <strong [class.one]="column.value === 1" 
-                        [class.two]="column.value === 2"
-                        [class.three]="column.value === 3"
-                        [class.four]="column.value === 4"
-                        [class.five]="column.value === 5">
-                  {{ column.value == 0 ? '': column.value }}</strong>
-              </span>
-              <span *ngIf="column.state" class="fas fa-bomb w-100 text-center"></span>
+  </header>
+
+  <div class="page-content">
+    <div class="header">
+
+    </div>
+    <div #field class="minesweeper text-center">
+
+      <div class="content p-3">
+        <div *ngIf="isGameOver" class="overlay position-absolute w-100 h-100"> </div>
+        <div *ngFor="let row of regions; let x = index" class="d-flex flex-row m-0 p-0 justify-content-center">
+          <div *ngFor="let column of row; let y = index" class="">
+            <div class="region d-flex aling-items-center">
+              <div *ngIf="!column.revealed" class="region-secret d-flex align-items-center" (mousedown)="mousedown()"
+                (mouseup)="mouseup()" (blur)="mouseup()" (click)="onRegionLeftClick(x ,y)"
+                (contextmenu)="onRegionRightClick(x ,y)">
+                <span *ngIf="column.marked" class="fas fa-flag w-100 text-center"></span>
+              </div>
+              <div *ngIf="column.revealed" class="region-revealed d-flex align-items-center"
+                (click)="onRegionLeftClick(x ,y)" (contextmenu)="onRegionRightClick(x ,y)">
+                <span *ngIf="!column.state" class="w-100 text-center">
+                  <strong [class.one]="column.value === 1" [class.two]="column.value === 2"
+                    [class.three]="column.value === 3" [class.four]="column.value === 4"
+                    [class.five]="column.value === 5">
+                    {{ column.value == 0 ? '': column.value }}</strong>
+                </span>
+                <span *ngIf="column.state" class="fas fa-bomb w-100 text-center"></span>
+              </div>
             </div>
           </div>
         </div>
